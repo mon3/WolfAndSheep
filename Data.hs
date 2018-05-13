@@ -17,6 +17,12 @@ possibleBoardX = [0..7]
 possibleBoardY = [0..7]
 wolfMoves = [Point x y | x <- [1,-1], y <- [1,-1]] -- przesunięcia wilka
 sheepMoves = [Point x y | x <- [1,-1], y <- [1]] -- przesunięcia owcy
+boardBoundaryHorizontal = [Point x y | x<- [0..7], y <- [0,7]]
+boardBoundaryVertical = [Point x y | x<- [0,7], y <- [1..6]]
+boardBoundaries = boardBoundaryVertical ++ boardBoundaryHorizontal
+boardXY = [0,7]
+
+
 
 sheepNumber = [0..3]
 
@@ -52,18 +58,35 @@ checkUsedSheepPositions (Sheep sheeps) delta = if elem True positionList then Tr
 
 
 
+validMove :: Point -> [Int] -> Bool
+validMove point [low, high] = if (x >= low) && (x<=high) && (y>=low) && (y<=high) then True
+							  else False
+							  where
+							  x = (xPoint point)
+							  y = (yPoint point)
+
+
+
+checkPointWithinBoard :: Point -> [Point] -> Bool
+checkPointWithinBoard _ [] = True
+checkPointWithinBoard point (current:rest) = if (((xPoint point) <= (xPoint current)) && ((yPoint point) <= (yPoint current))) then (checkPointWithinBoard point rest)
+								   else False
+
 
 moveSheep :: GameState -> Int -> Point -> GameState
 moveSheep (GameState wolf sheep) idx delta = (GameState wolf (Sheep (changeSheepPosition sheep idx delta)))
 
 
+
 validWolfMove :: GameState -> Point -> Bool
-validWolfMove (GameState (Wolf wolf) sheep) delta = if  checkUsedSheepPositions sheep delta == True then False
+validWolfMove (GameState (Wolf wolf) sheep) delta = if  (checkUsedSheepPositions sheep delta) && (validMove newPosition boardXY) then False
 													else True
+													where newPosition = (moveHero wolf delta)
 
 -- validSheepMove :: GameState -> Point -> Bool
 -- validSheepMove (GameState (Wolf wolf) sheep) delta = if  checkUsedSheepPositions sheep delta == True then False
 -- 													else True
+
 
 
 
@@ -76,9 +99,14 @@ initialize wolfStates sheepStates = GameState wolf sheep
 									
 
 
--- atRandIndex :: [Point]  -> Point  -- note that this is gives itself an IO action
+atRandIndex :: [Point] -> IO Point  -- note that this is gives itself an IO action
+atRandIndex l = do
+    i <- randomRIO (0, length l - 1) 
+    return (l !! i)
+
+-- atRandIndex :: [Point]  -> Point IO -- note that this is gives itself an IO action
 -- atRandIndex []  = (Point 1 1) 
--- atRandIndex l  =  fmap (l !!) $ randomRIO (0, length l - 1)  :: Point
+-- atRandIndex l  =  fmap (l !!) $ randomRIO (0, length l - 1)  :: Point IO
 
 -- res = atRandIndex wolfInitStates
 
@@ -97,4 +125,12 @@ gameState = initialize wolfInitStates sheepInitStates
 -- main = print(map comparePositions [(Point 1 1) (Point 2 2)] (Point 1 1))
 
 -- main = print(sheep)
-main = print(validWolfMove gameState (Point 1 1))
+-- main = print(validWolfMove gameState (Point 1 8))
+
+-- main = print(validMove (Point 1 8) boardXY)
+
+main = do
+    res <- (atRandIndex wolfInitStates)
+    print(res)
+    -- x <- res   --strzałka wyciąga wartość z monady do x
+    -- print(x)
