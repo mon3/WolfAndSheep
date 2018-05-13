@@ -39,8 +39,32 @@ changeSheepPosition (Sheep (position:sheeps)) 0 delta =  ((moveHero position del
 changeSheepPosition (Sheep (position:sheeps)) idx delta =  (position: (changeSheepPosition (Sheep sheeps) (idx-1) delta))
 
 
+comparePositions :: Point -> Point -> Bool
+comparePositions point1 point2 = if point1==point2 then True
+								 else False
+
+
+checkUsedSheepPositions :: Sheep -> Point -> Bool
+checkUsedSheepPositions (Sheep sheeps) delta = if elem True positionList then True
+											   else False
+											   where 
+											   positionList = map (comparePositions delta) sheeps
+
+
+
+
 moveSheep :: GameState -> Int -> Point -> GameState
 moveSheep (GameState wolf sheep) idx delta = (GameState wolf (Sheep (changeSheepPosition sheep idx delta)))
+
+
+validWolfMove :: GameState -> Point -> Bool
+validWolfMove (GameState (Wolf wolf) sheep) delta = if  checkUsedSheepPositions sheep delta == True then False
+													else True
+
+-- validSheepMove :: GameState -> Point -> Bool
+-- validSheepMove (GameState (Wolf wolf) sheep) delta = if  checkUsedSheepPositions sheep delta == True then False
+-- 													else True
+
 
 
 initialize :: [Point] -> [Point] -> GameState
@@ -65,7 +89,12 @@ initialize wolfStates sheepStates = GameState wolf sheep
 ---------------------------INITIALIZATION---------------------------------------------
 wolfInitStates = [Point x y | y <- [7], x <- [0..7], odd x] 
 sheepInitStates = [Point x y | y <- [0], x <- [0..7], even x]
+sheep = Sheep sheepInitStates
 -- main = print(initialize wolfInitStates sheepInitStates)
 gameState = initialize wolfInitStates sheepInitStates
 -- main = print(moveWolf gameState (Point 1 (-1)))
-main = print(moveSheep gameState 3 (Point 1 (1))) -- owce o indeksach [0;3] poruszaja sie po planszy
+-- main = print(moveSheep gameState 3 (Point 1 (1))) -- owce o indeksach [0;3] poruszaja sie po planszy
+-- main = print(map comparePositions [(Point 1 1) (Point 2 2)] (Point 1 1))
+
+-- main = print(sheep)
+main = print(validWolfMove gameState (Point 1 1))
