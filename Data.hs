@@ -88,30 +88,19 @@ validWolfMove (GameState (Wolf wolf) sheep) delta = if  (checkUsedSheepPositions
 -- 													else True
 
 
-
-
-initialize :: [Point] -> [Point] -> GameState
-initialize wolfStates sheepStates = GameState wolf sheep
-	where 
-	wolfState = (wolfStates!!1)
-	wolf = Wolf wolfState
-	sheep = Sheep sheepStates
-									
-
-
 atRandIndex :: [Point] -> IO Point  -- note that this is gives itself an IO action
 atRandIndex l = do
     i <- randomRIO (0, length l - 1) 
     return (l !! i)
 
--- atRandIndex :: [Point]  -> Point IO -- note that this is gives itself an IO action
--- atRandIndex []  = (Point 1 1) 
--- atRandIndex l  =  fmap (l !!) $ randomRIO (0, length l - 1)  :: Point IO
-
--- res = atRandIndex wolfInitStates
 
 
-
+initialize :: [Point] -> [Point] -> IO GameState 
+initialize wolfStates sheepStates = do
+	wolfState <- (atRandIndex wolfStates)
+	let game = GameState (Wolf wolfState) (Sheep sheepStates)
+	return game
+									
 
 
 ---------------------------INITIALIZATION---------------------------------------------
@@ -119,7 +108,7 @@ wolfInitStates = [Point x y | y <- [7], x <- [0..7], odd x]
 sheepInitStates = [Point x y | y <- [0], x <- [0..7], even x]
 sheep = Sheep sheepInitStates
 -- main = print(initialize wolfInitStates sheepInitStates)
-gameState = initialize wolfInitStates sheepInitStates
+-- gameState = (initialize wolfInitStates sheepInitStates)
 -- main = print(moveWolf gameState (Point 1 (-1)))
 -- main = print(moveSheep gameState 3 (Point 1 (1))) -- owce o indeksach [0;3] poruszaja sie po planszy
 -- main = print(map comparePositions [(Point 1 1) (Point 2 2)] (Point 1 1))
@@ -129,8 +118,12 @@ gameState = initialize wolfInitStates sheepInitStates
 
 -- main = print(validMove (Point 1 8) boardXY)
 
-main = do
-    res <- (atRandIndex wolfInitStates)
-    print(res)
+-- main = do
+--     res <- (atRandIndex wolfInitStates)
+--     print(res)
     -- x <- res   --strzałka wyciąga wartość z monady do x
     -- print(x)
+
+main = do
+    gameState <- (initialize wolfInitStates sheepInitStates)
+    print(gameState)
