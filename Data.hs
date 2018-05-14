@@ -50,11 +50,12 @@ comparePositions point1 point2 = if point1==point2 then True
 								 else False
 
 
+-- zwraca True, jesli ktoras z owiec zajmuje juz wskazane miejsce
 checkUsedSheepPositions :: Sheep -> Point -> Bool
-checkUsedSheepPositions (Sheep sheeps) delta = if elem True positionList then True
+checkUsedSheepPositions (Sheep sheeps) newPoint = if elem True positionList then True
 											   else False
 											   where 
-											   positionList = map (comparePositions delta) sheeps
+											   positionList = map (comparePositions newPoint) sheeps
 
 
 
@@ -79,13 +80,18 @@ moveSheep (GameState wolf sheep) idx delta = (GameState wolf (Sheep (changeSheep
 
 
 validWolfMove :: GameState -> Point -> Bool
-validWolfMove (GameState (Wolf wolf) sheep) delta = if  (checkUsedSheepPositions sheep delta) && (validMove newPosition boardXY) then False
-													else True
+validWolfMove (GameState (Wolf wolf) sheep) delta = if  ((checkUsedSheepPositions sheep delta)==False) && (validMove newPosition boardXY) then True
+													else False
 													where newPosition = (moveHero wolf delta)
 
--- validSheepMove :: GameState -> Point -> Bool
--- validSheepMove (GameState (Wolf wolf) sheep) delta = if  checkUsedSheepPositions sheep delta == True then False
--- 													else True
+
+-- -- z danego stanu chcemy przejsc owca o wskazanym indeksie o delte: sprawdzamy czy nie koliduje z innymi owcami oraz wilkiem
+validSheepMove :: GameState -> Int -> Point -> Bool
+validSheepMove (GameState (Wolf wolf) (Sheep (sheep:rest))) 0 delta = if ((checkUsedSheepPositions (Sheep rest) newSheepPosition)==False) && (validMove newSheepPosition boardXY) && ((comparePositions wolf sheep)==False) then True
+															else False
+															where newSheepPosition = (moveHero sheep delta)
+validSheepMove (GameState (Wolf wolf)(Sheep (sheep:rest))) idx delta = validSheepMove (GameState (Wolf wolf) (Sheep(rest++[sheep]))) (idx-1) delta
+
 
 
 atRandIndex :: [Point] -> IO Point  -- note that this is gives itself an IO action
@@ -107,6 +113,16 @@ initialize wolfStates sheepStates = do
 wolfInitStates = [Point x y | y <- [7], x <- [0..7], odd x] 
 sheepInitStates = [Point x y | y <- [0], x <- [0..7], even x]
 sheep = Sheep sheepInitStates
+
+-- to test if wolf move is valid
+main = do
+    gameState <- (initialize wolfInitStates sheepInitStates)
+    print(gameState)
+    print(validSheepMove gameState 0 (Point (-1) 1))
+
+
+
+
 -- main = print(initialize wolfInitStates sheepInitStates)
 -- gameState = (initialize wolfInitStates sheepInitStates)
 -- main = print(moveWolf gameState (Point 1 (-1)))
@@ -124,6 +140,3 @@ sheep = Sheep sheepInitStates
     -- x <- res   --strzałka wyciąga wartość z monady do x
     -- print(x)
 
-main = do
-    gameState <- (initialize wolfInitStates sheepInitStates)
-    print(gameState)
