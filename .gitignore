@@ -1,0 +1,8 @@
+# Build
+.stack-work
+out
+
+# IntelliJ
+.idea
+*.iml
+
