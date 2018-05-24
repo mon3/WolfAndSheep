@@ -29,7 +29,17 @@ main = do
     gameState <- (initialize wolfInitStates sheepInitStates)
     print(gameState)
     print(validSheepMove gameState 0 (Point (-1) 1))
-    print (g 3)
+    print(g 3)
+--    let val = (getHeuristic gameState)
+    let newPos =[ moveHero (getWolfMove gameState) point | point <- wolfMoves, (validWolfMove gameState point)]
+    let res =  wolfWon (GameState (Wolf (Point 7 1)) (Sheep [Point 4 4,Point 2 4,Point 0 4,Point 0 6])) (Point (-1) (-1))
+    let gameTree = buildGameTree (GameState (Wolf (Point 2 3)) (Sheep [Point 7 2,Point 4 3,Point 2 1,Point 0 1]))
+    print(gameTree)
+    print(depth gameTree)
+--    print(prune 2 gameTree)
+--    print(lastWolfMove (GameState (Wolf (Point 6 2)) (Sheep [Point 4 4,Point 2 4,Point 0 4,Point 0 6])))
+
+--    print(buildGameTree (GameState (Wolf (Point 1 2)) (Sheep [Point 7 2,Point 4 3,Point 2 1,Point 0 1])))
 
 
 

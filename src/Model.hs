@@ -10,6 +10,7 @@ data Sheep = Sheep [Point] deriving (Eq,Show)
 data GameState = GameState Wolf Sheep deriving Show
 data Result = WolfWins | SheepWins | Unrecognized deriving Show
 
+
 possibleBoardX = [0..7]
 possibleBoardY = [0..7]
 wolfMoves = [Point x y | x <- [1,-1], y <- [1,-1]] -- przesunięcia wilka
@@ -26,6 +27,7 @@ xPoint (Point x y) = x
 
 yPoint :: Point -> Int
 yPoint (Point x y) = y
+
 
 moveHero :: Point -> Point -> Point
 moveHero current delta = Point (xPoint(current) + xPoint(delta)) (yPoint(current)+yPoint(delta))
@@ -44,6 +46,8 @@ comparePositions :: Point -> Point -> Bool
 comparePositions point1 point2 = if point1==point2 then True
                                  else False
 
+possibleNewWolfPositions :: GameState -> [Point]
+possibleNewWolfPositions (GameState (Wolf wolf) sheep) = [(moveHero wolf point) | point <- wolfMoves]
 
 -- zwraca True, jesli ktoras z owiec zajmuje juz wskazane miejsce
 checkUsedSheepPositions :: Sheep -> Point -> Bool
@@ -75,9 +79,14 @@ moveSheep (GameState wolf sheep) idx delta = (GameState wolf (Sheep (changeSheep
 
 
 validWolfMove :: GameState -> Point -> Bool
-validWolfMove (GameState (Wolf wolf) sheep) delta = if  ((checkUsedSheepPositions sheep delta)==False) && (validMove newPosition boardXY) then True
+validWolfMove (GameState (Wolf wolf) sheep) delta = if  ((checkUsedSheepPositions sheep newPosition)==False) && (validMove newPosition boardXY) then True
                                                     else False
                                                          where newPosition = (moveHero wolf delta)
+
+--validWolfMovePosition :: GameState -> Point -> Bool
+--validWolfMovePosition (GameState (Wolf wolf) sheep) delta = if  ((checkUsedSheepPositions sheep delta)==False) && (validMove newPosition boardXY) then True
+--                                                    else False
+--                                                         where newPosition = (moveHero wolf delta)
 
 
 -- -- z danego stanu chcemy przejsc owca o wskazanym indeksie o delte: sprawdzamy czy nie koliduje z innymi owcami oraz wilkiem
@@ -87,3 +96,6 @@ validSheepMove (GameState (Wolf wolf) (Sheep (sheep:rest))) 0 delta = if ((check
                                                                  where newSheepPosition = (moveHero sheep delta)
 validSheepMove (GameState (Wolf wolf)(Sheep (sheep:rest))) idx delta = validSheepMove (GameState (Wolf wolf) (Sheep(rest++[sheep]))) (idx-1) delta
 
+
+getWolfMove :: GameState -> Point
+getWolfMove (GameState (Wolf wolf) sheep) = wolf
