@@ -65,28 +65,6 @@ prune d (Node a xs) = Node a (map (prune (d - 1)) xs)
 --                                                       newPosition = moveHero position
 
 -- heurystyka oceniająca wartość danego układu planszy dla wilka
-evalBoard :: GameState -> Int
-evalBoard (GameState (Wolf (Point x y)) sheep) =
-	heightScore + wolfFreedomScore {-+ sheepDensityScore-} where
-	 heightScore = (7-y) * 4
-	 sheepDensityScore = evalSheepDensity sheep
-	 wolfFreedomScore = length [move | move <- wolfMoves, validWolfMove (GameState (Wolf (Point x y)) sheep) move]
-
-
-evalSheepDensity :: [Sheep] -> Int
-evalSheepDensity sheep =
-	6-(maxX-minX)+(maxY-minY) where
-	 (minX, maxX, minY, maxY) = getExtremeValues sheep (10,  (-1),  10,  (-1))
-
-getExtremeValues :: [Sheep] -> (Int,Int,Int,Int) -> (Int,Int,Int,Int)
-getExtremeValues [] extremes = extremes
-getExtremeValues ((Sheep (Point x y)):rest) (minX,maxX,minY,maxY) =
-	getExtremeValues rest (newMinX, newMaxX, newMinY, newMaxY) where
-	 newMinX = min x minX
-	 newMaxX = max x maxX
-	 newMinY = min y minY
-	 newMaxY = max y maxY
-
 
 -- uruchomienie algorytmu wyboru ruchu wilka
 --wolfMoveState :: GameState -> (Result, GameState)
