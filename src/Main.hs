@@ -1,6 +1,7 @@
 module Main where
 import Model
 import AI
+import Controller
 import System.Random
 
 
@@ -19,17 +20,13 @@ initialize wolfStates sheepStates = do
 
 
 
----------------------------INITIALIZATION---------------------------------------------
-wolfInitStates = [Point x y | y <- [7], x <- [0..7], odd x]
-sheepInitStates = [Point x y | y <- [0], x <- [0..7], even x]
-sheep = Sheep sheepInitStates
-
 -- to test if wolf move is valid
 main = do
     gameState <- (initialize wolfInitStates sheepInitStates)
     print(gameState)
     print(validSheepMove gameState 0 (Point (-1) 1))
     print (g 3)
+    print getFirstStep
 
 
 

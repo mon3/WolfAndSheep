@@ -9,6 +9,7 @@ data Wolf = Wolf Point deriving Show
 data Sheep = Sheep [Point] deriving (Eq,Show)
 data GameState = GameState Wolf Sheep deriving Show
 data Result = WolfWins | SheepWins | Unrecognized deriving Show
+data GameInfo = GameInfo GameState Result deriving Show
 
 possibleBoardX = [0..7]
 possibleBoardY = [0..7]

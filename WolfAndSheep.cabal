@@ -12,7 +12,7 @@ extra-source-files:  README.md
 executable WolfAndSheep
   hs-source-dirs:      src
   main-is:             Main.hs
-  other-modules:       Model, AI
+  other-modules:       Model, AI, Controller
   default-language:    Haskell2010
   build-depends:       base >= 4.7 && < 5,
                        random >= 1.0,
