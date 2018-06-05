@@ -1,6 +1,7 @@
 --module View where
 import Model
 import GUI
+import Controller
 ------------------------------------------------------------------------------------------------------------
 -----------------------   START   --------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------
@@ -45,7 +46,7 @@ duringGame state = do
     putStrLn "3. Zakończ rozgrywkę"
     option <- getLine
     if (checkOption ["1","2","3"] option) then case option of
-                                                 "1" -> duringGame state
+                                                 "1" -> printProposalMove state
                                                  "2" -> actionAfterSavingState state
                                                  "3" -> start initGameState
       else

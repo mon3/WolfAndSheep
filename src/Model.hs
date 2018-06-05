@@ -87,3 +87,9 @@ validSheepMove (GameState (Wolf wolf) (Sheep (sheep:rest))) 0 delta = if ((check
                                                                  where newSheepPosition = (moveHero sheep delta)
 validSheepMove (GameState (Wolf wolf)(Sheep (sheep:rest))) idx delta = validSheepMove (GameState (Wolf wolf) (Sheep(rest++[sheep]))) (idx-1) delta
 
+
+getSheepAcceptableMoves :: GameState -> [[Point]]
+getSheepAcceptableMoves (GameState (Wolf wolf) (Sheep (sheep:rest))) = take ((length proposed) - 1) proposed
+                                                               where proposed = (filterProposalMoveForSheep (GameState (Wolf wolf) (Sheep (sheep:rest))) 0)
+                                                                                where filterProposalMoveForSheep (GameState (Wolf wolf) (Sheep (sheep:rest))) idx  | idx < (length (sheep:rest)) = [ map (moveHero sheep) (filter (validSheepMove ((GameState (Wolf wolf) (Sheep (sheep:rest)))) 0) (sheepMoves))] ++ (filterProposalMoveForSheep (GameState (Wolf wolf) (Sheep (rest++[sheep]))) (idx+1))
+                                                                                                                                                                   | otherwise = [[]]
