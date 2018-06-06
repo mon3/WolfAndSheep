@@ -9,14 +9,15 @@ sheepInitStates = [Point x y | y <- [0], x <- [0..7], odd x]
 wolf = Wolf (Point 0 7)
 sheep = Sheep sheepInitStates
 initGameState = GameState wolf sheep
+initGameInfo = GameInfo initGameState Unrecognized
 ------------------------------------------------------------------------------------------------------------
 
 
 ------------------------------------------------------------------------------------------------------------
 -----------------------   VIEWS   --------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------
-start :: GameState -> IO ()
-start state = do
+start :: GameInfo -> IO ()
+start gameInfo = do
     putStrLn "Woolf \128058 and Sheep \128017 Game"
     putStrLn "1. Rozpoczęcie gry"
     putStrLn "2. Wczytanie gry"
@@ -24,71 +25,71 @@ start state = do
     option <- getLine
     if (checkOption ["1","2","9"] option) then case option of
                                                  "1" -> do print ("Rozpoczęcie gry" ++ option)
-                                                           duringGame state
+                                                           duringGame gameInfo
                                                  "2" -> print ("Wczytaj gre" ++ option)
                                                  "9" -> do putStrLn "Dziękujemy za grę. Do zobaczenia!"
                                                            return ()
       else
           do putStrLn "Błędnie Wybrana opcja\n"
-             start initGameState
+             start initGameInfo
 ------------------------------------------------------------------------------------------------------------
 checkOption:: [String] -> String -> Bool
 checkOption [] _ = False
 checkOption (x:xs) opt = if x == opt then True
                          else checkOption xs opt
 ------------------------------------------------------------------------------------------------------------
-duringGame :: GameState -> IO ()
-duringGame state = do
-    printChessBoard state 1 1
+duringGame :: GameInfo -> IO ()
+duringGame gameInfo = do
+    printChessBoard (state gameInfo) 1 1
     putStrLn "Wciśnij przycisk aby wykonać jedną z następujących operacji"
     putStrLn "1. Wykonaj ruch"
     putStrLn "2. Zapisz grę"
     putStrLn "3. Zakończ rozgrywkę"
     option <- getLine
     if (checkOption ["1","2","3"] option) then case option of
-                                                 "1" -> printPossibleMovements state
-                                                 "2" -> actionAfterSavingState state
-                                                 "3" -> start initGameState
+                                                 "1" -> printPossibleMovements gameInfo
+                                                 "2" -> actionAfterSavingState gameInfo
+                                                 "3" -> start initGameInfo
       else
           do putStrLn "Błędnie Wybrana opcja\n"
-             duringGame state
+             duringGame gameInfo
 
 ------------------------------------------------------------------------------------------------------------
-printPossibleMovements state = do
-   printProposalMove state
+printPossibleMovements gameInfo = do
+   printProposalMove (state gameInfo)
    userMove <- getLine
    case reads userMove :: [(Int,String)] of
         [(n, a)] -> do print n
                        print (null a)
-                       if (null a && validSelectedMove state n) then do putStrLn "Send move to algorithm!"
-                                                                        putStrLn ""
-                                                                        duringGame state
+                       if (null a && validSelectedMove (state gameInfo) n) then do putStrLn "Send move to algorithm!"
+                                                                                   putStrLn ""
+                                                                                   duringGame gameInfo
                        else do putStrLn "Błędnie podana możliwość ruchu"
                                putStrLn ""
-                               duringGame state
+                               duringGame gameInfo
         _ -> do putStrLn "Błędnie podana możliwość ruchu"
                 putStrLn ""
-                duringGame state
+                duringGame gameInfo
 ------------------------------------------------------------------------------------------------------------
-actionAfterSavingState state = do
+actionAfterSavingState gameInfo = do
     putStrLn "Zapisanie obecnego stanu gry"
     putStrLn "1. Powrót do gry"
     putStrLn "2. Zakończ rozgrywkę"
     option <- getLine
     if (checkOption ["1","2"] option) then case option of
-                                            "1" -> duringGame state
-                                            "2" -> start initGameState
+                                            "1" -> duringGame gameInfo
+                                            "2" -> start initGameInfo
       else
           do putStrLn "Błędnie Wybrana opcja\n"
-             actionAfterSavingState initGameState
+             actionAfterSavingState gameInfo
 ------------------------------------------------------------------------------------------------------------
 endGame = do
     putStrLn "Wygrał: "
     putStrLn "Aby powrócić do ekranu startowego wciśnij dowolny przycisk"
     x <- getChar
-    start initGameState
+    start initGameInfo
 ------------------------------------------------------------------------------------------------------------
 
 main :: IO ()
 main = do
-        start initGameState
+        start initGameInfo
