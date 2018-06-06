@@ -46,13 +46,29 @@ duringGame state = do
     putStrLn "3. Zakończ rozgrywkę"
     option <- getLine
     if (checkOption ["1","2","3"] option) then case option of
-                                                 "1" -> printProposalMove state
+                                                 "1" -> printPossibleMovements state
                                                  "2" -> actionAfterSavingState state
                                                  "3" -> start initGameState
       else
           do putStrLn "Błędnie Wybrana opcja\n"
              duringGame state
 
+------------------------------------------------------------------------------------------------------------
+printPossibleMovements state = do
+   printProposalMove state
+   userMove <- getLine
+   case reads userMove :: [(Int,String)] of
+        [(n, a)] -> do print n
+                       print (null a)
+                       if (null a && validSelectedMove state n) then do putStrLn "Send move to algorithm!"
+                                                                        putStrLn ""
+                                                                        duringGame state
+                       else do putStrLn "Błędnie podana możliwość ruchu"
+                               putStrLn ""
+                               duringGame state
+        _ -> do putStrLn "Błędnie podana możliwość ruchu"
+                putStrLn ""
+                duringGame state
 ------------------------------------------------------------------------------------------------------------
 actionAfterSavingState state = do
     putStrLn "Zapisanie obecnego stanu gry"
