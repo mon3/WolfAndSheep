@@ -2,6 +2,7 @@ module Main where
 import Model
 import AI
 import System.Random
+import System.IO.Unsafe
 
 
 atRandIndex :: [Point] -> IO Point  -- note that this is gives itself an IO action
@@ -17,6 +18,11 @@ initialize wolfStates sheepStates = do
     let game = GameState (Wolf wolfState) (Sheep sheepStates)
     return game
 
+
+-- assuming wolf always does the first step
+getFirstGameStep :: [Point] -> [Point] -> GameDTO
+getFirstGameStep wolfStates sheepStates = let gsFirst = initialize wolfStates sheepStates
+                                              in wolfMoveState (GameDTO (unsafePerformIO gsFirst, Unrecognized))
 
 
 ---------------------------INITIALIZATION---------------------------------------------
@@ -50,3 +56,6 @@ main = do
 --    print(wolfMoveState (GameDTO((GameState (Wolf (Point 4 3)) (Sheep [Point 3 2,Point 5 2,Point 3 4,Point 5 4])), Unrecognized)))
 --    CHOOSE WOLF MOVE
     print(wolfMoveState (GameDTO((GameState (Wolf (Point 3 4)) (Sheep [Point 2 3 ,Point 4 2,Point 6 4,Point 4 5])), Unrecognized)))
+
+    print(validSheepMove (GameState (Wolf (Point 6 1)) (Sheep [Point 7 0,Point 3 0,Point 5 0,Point 7 0] )) 0 (Point (-1) 1))
+    print(getFirstGameStep wolfInitStates sheepInitStates)
