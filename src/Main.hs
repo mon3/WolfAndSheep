@@ -2,6 +2,7 @@
 module Main where
 import Model
 import AI
+import Controller
 import System.Random
 import System.IO.Unsafe
 
@@ -38,7 +39,6 @@ main = do
     print(getHeuristic (GameState (Wolf (Point 3 5)) (Sheep [Point 2 4,Point 4 4,Point 2 6,Point 4 6])))
 
     print(validSheepMove gameState 0 (Point (-1) 1))
-    print(g 3)
 --    let val = (getHeuristic gameState)
     let newPos =[ moveHero (getWolfMove gameState) point | point <- wolfMoves, (validWolfMove gameState point)]
     let res =  wolfWon (GameState (Wolf (Point 7 1)) (Sheep [Point 4 4,Point 2 4,Point 0 4,Point 0 6])) (Point (-1) (-1))

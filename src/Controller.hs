@@ -1,5 +1,8 @@
 module Controller where
 import Model
+import AI
+import Data.Maybe
+import Data.List
 
 endLine = "\n"
 
@@ -28,7 +31,7 @@ validSelectedMove  :: GameState-> Int -> Bool
 validSelectedMove g selectedRecordNumber = elem selectedRecordNumber (getRecordNumberList g)
 
 getRecordNumberList :: GameState -> [Int]
-getRecordNumberList g=  getSheepRecordNumber (getSheepAcceptableMoves g) 0 []
+getRecordNumberList g =  getSheepRecordNumber (getSheepAcceptableMoves g) 0 []
 
 
 getSheepRecordNumber :: [[Point]] -> Int -> [Int] -> [Int]
@@ -39,3 +42,25 @@ getSheepRecordNumber moves idx list | idx < length moves = getSheepRecordNumber 
                                                                                      | length list == 2 = [2*idx, 2*idx +1]
                                                                                      | otherwise = []
 
+getGameInfoAfterSheepMove :: GameInfo -> Int -> GameInfo
+getGameInfoAfterSheepMove (GameInfo (GameState wolf (Sheep sheep)) res) idx = GameInfo (GameState (wolf) (Sheep (map (\x -> if ((fromJust $ elemIndex x sheep) == (div idx 2)) then np else x) sheep))) res
+                                                                                 where np = concat (getSheepAcceptableMoves (GameState wolf (Sheep sheep))) !! (computeIndex (GameState wolf (Sheep sheep)) idx)
+
+computeIndex:: GameState -> Int -> Int
+computeIndex _ id = id
+
+-- start of MIN-MAX algorithm which selects best wolf move
+-- return GameInfo (new gamestate) (game result)
+wolfMoveState :: GameInfo -> GameInfo
+wolfMoveState (GameInfo gs res) =
+  if (null possibleMoves)
+  then
+   GameInfo gs SheepWins
+  else
+   if (lastWolfMove gs)
+   then
+    GameInfo gs WolfWins
+   else
+    GameInfo (wolfGameMove gs) Unrecognized
+  where
+   possibleMoves = [displacement | displacement <- wolfMoves, validWolfMove gs displacement]

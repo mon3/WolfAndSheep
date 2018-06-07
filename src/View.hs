@@ -67,11 +67,10 @@ printPossibleMovements gameInfo = do
    printProposalMove (state gameInfo)
    userMove <- getLine
    case reads userMove :: [(Int,String)] of
-        [(n, a)] -> do print n
-                       print (null a)
-                       if (null a && validSelectedMove (state gameInfo) n) then do putStrLn "Send move to algorithm!"
-                                                                                   putStrLn ""
-                                                                                   duringGame gameInfo
+        [(n, a)] -> do
+                       if (null a && validSelectedMove (state gameInfo) n) then do putStrLn "Ruch wilka!"
+                                                                                   putStrLn " "
+                                                                                   duringGame (wolfMoveState (getGameInfoAfterSheepMove gameInfo n))
                        else do putStrLn "Błędnie podana możliwość ruchu"
                                putStrLn ""
                                duringGame gameInfo
