@@ -3,13 +3,13 @@ module Model where
 import Data.Time.Clock
 import Data.Time.Calendar
 
-data Point = Point Int Int deriving (Eq,Show)
+data Point = Point Int Int deriving (Eq,Show,Read)
 
-data Wolf = Wolf Point deriving Show
-data Sheep = Sheep [Point] deriving (Eq,Show)
-data GameState = GameState Wolf Sheep deriving Show
-data Result = WolfWins | SheepWins | Unrecognized deriving Show
-data GameInfo = GameInfo {state :: GameState, result :: Result } deriving Show
+data Wolf = Wolf Point deriving (Eq,Show,Read)
+data Sheep = Sheep [Point] deriving (Eq,Show,Read)
+data GameState = GameState Wolf Sheep deriving (Eq, Show,Read)
+data Result = WolfWins | SheepWins | Unrecognized deriving (Eq,Show,Read)
+data GameInfo = GameInfo {state :: GameState, result :: Result } deriving (Eq,Show,Read)
 
 possibleBoardX = [0..7]
 possibleBoardY = [0..7]

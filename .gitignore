@@ -2,6 +2,9 @@
 .stack-work
 out
 
+#Saved games
+resources
+
 # IntelliJ
 .idea
 *.iml
