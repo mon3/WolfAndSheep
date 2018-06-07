@@ -131,18 +131,18 @@ wolfGameMove gs = (bestWolfMove moves) where
 
 
 -- start of MIN-MAX algorithm which selects best wolf move
--- return GameDTO (new gamestate, game result)
-wolfMoveState :: GameDTO -> GameDTO
-wolfMoveState (GameDTO (gs, res)) =
+-- return GameInfo (new gamestate) (game result)
+wolfMoveState :: GameInfo -> GameInfo
+wolfMoveState (GameInfo gs res) =
   if (null possibleMoves)
   then
-   GameDTO (gs,SheepWins)
+   GameInfo gs SheepWins
   else
    if (lastWolfMove gs)
    then
-    GameDTO (gs, WolfWins)
+    GameInfo gs WolfWins
    else
-    GameDTO (wolfGameMove gs, Unrecognized)
+    GameInfo (wolfGameMove gs) Unrecognized
   where
    possibleMoves = [displacement | displacement <- wolfMoves, validWolfMove gs displacement]
 

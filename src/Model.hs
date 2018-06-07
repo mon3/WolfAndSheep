@@ -3,14 +3,14 @@ module Model where
 import Data.Time.Clock
 import Data.Time.Calendar
 
-data Point = Point Int Int deriving (Eq,Show)
+data Point = Point Int Int deriving (Eq,Show,Read)
 
-data Wolf = Wolf Point deriving Show
-data Sheep = Sheep [Point] deriving (Eq,Show)
-data GameState = GameState Wolf Sheep deriving Show
-data Result = WolfWins | SheepWins | Unrecognized deriving Show
--- GameState and Result as GameDTO to connect frontend and backend
-data GameDTO = GameDTO (GameState, Result) deriving Show
+data Wolf = Wolf Point deriving (Eq,Show,Read)
+data Sheep = Sheep [Point] deriving (Eq,Show,Read)
+data GameState = GameState Wolf Sheep deriving (Eq, Show,Read)
+data Result = WolfWins | SheepWins | Unrecognized deriving (Eq,Show,Read)
+data GameInfo = GameInfo {state :: GameState, result :: Result } deriving (Eq,Show,Read)
+
 
 
 possibleBoardX = [0..7]
@@ -120,3 +120,10 @@ validSheepMove (GameState (Wolf wolf)(Sheep (sheep:rest))) idx delta = validShee
 -- get wolf move from given GameState
 getWolfMove :: GameState -> Point
 getWolfMove (GameState (Wolf wolf) sheep) = wolf
+
+
+getSheepAcceptableMoves :: GameState -> [[Point]]
+getSheepAcceptableMoves (GameState (Wolf wolf) (Sheep (sheep:rest))) = take ((length proposed) - 1) proposed
+                                                                       where proposed = (filterProposalMoveForSheep (GameState (Wolf wolf) (Sheep (sheep:rest))) 0)
+                                                                                        where filterProposalMoveForSheep (GameState (Wolf wolf) (Sheep (sheep:rest))) idx  | idx < (length (sheep:rest)) = [ map (moveHero sheep) (filter (validSheepMove ((GameState (Wolf wolf) (Sheep (sheep:rest)))) 0) (sheepMoves))] ++ (filterProposalMoveForSheep (GameState (Wolf wolf) (Sheep (rest++[sheep]))) (idx+1))
+                                                                                                                                                                   | otherwise = [[]]

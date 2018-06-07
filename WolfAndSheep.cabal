@@ -16,4 +16,30 @@ executable WolfAndSheep
   default-language:    Haskell2010
   build-depends:       base >= 4.7 && < 5,
                        random >= 1.0,
+                       directory >= 1.3.0.2,
                        time
+
+executable gui
+  hs-source-dirs:      src
+  main-is:             View.hs
+  other-modules:       Model, GUI, Controller
+  default-language:    Haskell2010
+  build-depends:       base >= 4.7 && < 5,
+                       random >= 1.0,
+                       time,
+                       directory >= 1.3.0.2,
+                       ansi-terminal >=0.8.0.4
+--  ghc-Options:         -Wall
+
+Test-Suite test-gui-part
+  type:               exitcode-stdio-1.0
+  hs-source-dirs:     src,test
+  main-is:            Test.hs
+  other-modules:      Model, Controller
+  default-language:   Haskell2010
+  build-depends:      base >= 4.7 && < 5,
+                      test-framework,
+                      test-framework-hunit,
+                      HUnit,
+                      time,
+                      containers == 0.5.*
