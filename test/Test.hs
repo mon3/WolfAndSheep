@@ -28,9 +28,9 @@ testValidateSheepMove = test [ "Validate move sheep" ~: "0.1 Wolf: (0,7); Sheep:
                                "Validate move sheep" ~: "2.2 Wolf: (0,7); Sheep: (5,0) move: (-1, 1) to Point 4 1"   ~: True   ~=? (validSheepMove (GameState (Wolf (Point 0 7)) (Sheep [Point 5 0,Point 3 0,Point 5 0,Point 7 0] )) 0 (Point (-1) 1)),
                                "Validate move sheep" ~: "3.1 Wolf: (0,7); Sheep: (7,0) move: ( 1, 1) to Point 8 1"   ~: False  ~=? (validSheepMove (GameState (Wolf (Point 0 7)) (Sheep [Point 7 0,Point 3 0,Point 5 0,Point 7 0] )) 0 (Point   1  1)),
                                "Validate move sheep" ~: "3.2 Wolf: (0,7); Sheep: (7,0) move: (-1, 1) to Point 6 1"   ~: True   ~=? (validSheepMove (GameState (Wolf (Point 0 7)) (Sheep [Point 7 0,Point 3 0,Point 5 0,Point 7 0] )) 0 (Point (-1) 1)),
-                               "Validate move sheep" ~: "4.1 Wolf: (6,1); Sheep: (7,0) move: (-1, 1) to Point 6 1 - Conflict Woolf 1"
+                               "Validate move sheep" ~: "4.1 Wolf: (6,1); Sheep: (7,0) move: (-1, 1) to Point 6 1 - Conflict Wolf 1"
                                                                                                                      ~: False  ~=? (validSheepMove (GameState (Wolf (Point 6 1)) (Sheep [Point 7 0,Point 3 0,Point 5 0,Point 7 0] )) 0 (Point (-1) 1)),
-                               "Validate move sheep" ~: "4.2 Wolf: (2,1); Sheep: (1,0) move: (1, 1)  to Point 2 1 - Conflict Woolf 2"
+                               "Validate move sheep" ~: "4.2 Wolf: (2,1); Sheep: (1,0) move: (1, 1)  to Point 2 1 - Conflict Wolf 2"
                                                                                                                      ~: False  ~=? (validSheepMove (GameState (Wolf (Point 2 1)) (Sheep [Point 1 0,Point 3 0,Point 5 0,Point 7 0] )) 0 (Point   1  1)),
                                "Validate move sheep" ~: "5.1 Wolf: (0,7); Sheep: (5,0) move: (-1, 1) to Point 4 1 - Conflict with other Sheep in flock"
                                                                                                                      ~: False  ~=? (validSheepMove (GameState (Wolf (Point 0 7)) (Sheep [Point 5 0,Point 3 0,Point 4 1,Point 7 0] )) 0 (Point (-1) 1))
@@ -77,6 +77,19 @@ testValidSelectedMove = test [ "Test selected option " ~: "0." ~: True  ~=? (val
                                "Test selected option " ~: "7." ~: False ~=? (validSelectedMove (GameState (Wolf (Point 0 7)) (Sheep [Point 1 0,Point 3 0,Point 5 0,Point 7 0] )) 7)
                              ]
 
+testCreateNewGameInfo :: TTest.Test
+testCreateNewGameInfo  = test [ "Test update gameInfo " ~: "1.1" ~: (GameInfo (GameState (Wolf (Point 0 7)) (Sheep [Point 2 1,Point 3 0,Point 5 0,Point 7 0] ))  Unrecognized) ~=? (getGameInfoAfterSheepMove (GameInfo (GameState (Wolf (Point 0 7)) (Sheep [Point 1 0,Point 3 0,Point 5 0,Point 7 0]) )  Unrecognized) 0),
+                                "Test update gameInfo " ~: "1.2" ~: (GameInfo (GameState (Wolf (Point 0 7)) (Sheep [Point 0 1,Point 3 0,Point 5 0,Point 7 0] ))  Unrecognized) ~=? (getGameInfoAfterSheepMove (GameInfo (GameState (Wolf (Point 0 7)) (Sheep [Point 1 0,Point 3 0,Point 5 0,Point 7 0]) )  Unrecognized) 1),
+                                "Test update gameInfo " ~: "2.1" ~: (GameInfo (GameState (Wolf (Point 0 7)) (Sheep [Point 1 2,Point 2 1,Point 6 1,Point 7 0] ))  Unrecognized) ~=? (getGameInfoAfterSheepMove (GameInfo (GameState (Wolf (Point 0 7)) (Sheep [Point 0 1,Point 2 1,Point 6 1,Point 7 0]) )  Unrecognized) 0),
+                                "Test update gameInfo " ~: "2.2" ~: (GameInfo (GameState (Wolf (Point 0 7)) (Sheep [Point 0 1,Point 3 2,Point 6 1,Point 7 0] ))  Unrecognized) ~=? (getGameInfoAfterSheepMove (GameInfo (GameState (Wolf (Point 0 7)) (Sheep [Point 0 1,Point 2 1,Point 6 1,Point 7 0]) )  Unrecognized) 2),
+                                "Test update gameInfo " ~: "2.3" ~: (GameInfo (GameState (Wolf (Point 0 7)) (Sheep [Point 0 1,Point 1 2,Point 6 1,Point 7 0] ))  Unrecognized) ~=? (getGameInfoAfterSheepMove (GameInfo (GameState (Wolf (Point 0 7)) (Sheep [Point 0 1,Point 2 1,Point 6 1,Point 7 0]) )  Unrecognized) 3),
+                                "Test update gameInfo " ~: "2.4" ~: (GameInfo (GameState (Wolf (Point 0 7)) (Sheep [Point 0 1,Point 2 1,Point 7 2,Point 7 0] ))  Unrecognized) ~=? (getGameInfoAfterSheepMove (GameInfo (GameState (Wolf (Point 0 7)) (Sheep [Point 0 1,Point 2 1,Point 6 1,Point 7 0]) )  Unrecognized) 4),
+                                "Test update gameInfo " ~: "2.5" ~: (GameInfo (GameState (Wolf (Point 0 7)) (Sheep [Point 0 1,Point 2 1,Point 5 2,Point 7 0] ))  Unrecognized) ~=? (getGameInfoAfterSheepMove (GameInfo (GameState (Wolf (Point 0 7)) (Sheep [Point 0 1,Point 2 1,Point 6 1,Point 7 0]) )  Unrecognized) 5),
+                                "Test update gameInfo " ~: "3.1" ~: (GameInfo (GameState (Wolf (Point 0 7)) (Sheep [Point 1 0,Point 0 1,Point 3 2,Point 1 2] ))  Unrecognized) ~=? (getGameInfoAfterSheepMove (GameInfo (GameState (Wolf (Point 0 7)) (Sheep [Point 1 0,Point 0 1,Point 2 1,Point 1 2]) )  Unrecognized) 4),
+                                "Test update gameInfo " ~: "3.2" ~: (GameInfo (GameState (Wolf (Point 0 7)) (Sheep [Point 1 0,Point 0 1,Point 2 1,Point 2 3] ))  Unrecognized) ~=? (getGameInfoAfterSheepMove (GameInfo (GameState (Wolf (Point 0 7)) (Sheep [Point 1 0,Point 0 1,Point 2 1,Point 1 2]) )  Unrecognized) 6),
+                                "Test update gameInfo " ~: "3.3" ~: (GameInfo (GameState (Wolf (Point 0 7)) (Sheep [Point 1 0,Point 0 1,Point 2 1,Point 0 3] ))  Unrecognized) ~=? (getGameInfoAfterSheepMove (GameInfo (GameState (Wolf (Point 0 7)) (Sheep [Point 1 0,Point 0 1,Point 2 1,Point 1 2]) )  Unrecognized) 7)
+                              ]
+
 main :: IO Counts
 main = do _ <- runTestTT testHeroMove
           runTestTT testValidateSheepMove
@@ -84,3 +97,4 @@ main = do _ <- runTestTT testHeroMove
           runTestTT testPointEquality
           runTestTT testGetRecordNumberList
           runTestTT testValidSelectedMove
+          runTestTT testCreateNewGameInfo

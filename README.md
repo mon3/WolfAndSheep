@@ -4,12 +4,14 @@
 You need:
 * stack
 * terminal
+* create resources dir in main dir
 
-In terminal go to project main catalog and enter following command:
+In terminal go to project main dir and enter following command:
 ```
+   > mkdir resources
    > stack build
-   > stack .stack-work/dist/x86_64-linux/Cabal-2.0.1.0/build/gui/gui
+   > stack exec .stack-work/dist/x86_64-linux/Cabal-2.0.1.0/build/game/game
 ```
 
 or for fish one line:
-`stack build; and stack exec .stack-work/dist/x86_64-linux/Cabal-2.0.1.0/build/gui/gui`
+`stack build; and stack exec .stack-work/dist/x86_64-linux/Cabal-2.0.1.0/build/game/game`

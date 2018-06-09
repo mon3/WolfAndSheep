@@ -16,7 +16,7 @@ printChessBoard gameState idxCol idxRow = printChess 64 0 0 gameState idxCol idx
                                                                                                                   | mod (nrCol + nrRow) 2 == 0 && mod size 8 == 1 && size > 0 = do pickToPrint 0 nrCol nrRow wolf sheep col row
                                                                                                                                                                                    putStrLn ""
                                                                                                                                                                                    printChess (size - 1) 0 (nrRow + 1) gameState 1 2
-                                                                                                                  | otherwise = print gameState
+                                                                                                                  | otherwise = putStrLn " "
                                                                                                                   where pickToPrint color nrCol nrRow (Point wCol wRow) (Sheep sheepTiles) col row | wCol == nrCol && wRow == nrRow             = do printWolfSquare col row
                                                                                                                                                                                                    | isSheepTile sheepTiles (Point nrCol nrRow) = do printSheepSquare col row
                                                                                                                                                                                                    | color == 0                                 = do printWhiteEmptySquare col row
@@ -32,7 +32,7 @@ printBlackEmptySquare :: Int -> Int -> IO ()
 printBlackEmptySquare col row = printColorSquare Vivid Yellow Vivid White "" col row
 
 printSheepSquare :: Int -> Int -> IO ()
-printSheepSquare col row =  printColorSquare Dull Green Vivid White "\128017 " col row
+printSheepSquare col row =  printColorSquare Dull Blue Vivid White "\128017 " col row
 --printSheepSquare col row =  printColorSquare Dull Green Vivid White "S " col row
 
 printWolfSquare :: Int -> Int -> IO ()

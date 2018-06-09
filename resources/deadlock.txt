@@ -1,0 +1,1 @@
+GameInfo {state = GameState (Wolf (Point 6 7)) (Sheep [Point 0 7,Point 2 7,Point 4 7,Point 5 6]), result = Unrecognized}

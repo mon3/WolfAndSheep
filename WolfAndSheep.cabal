@@ -2,27 +2,16 @@ name:                WolfAndSheep
 version:             0.1.0.0
 homepage:            https://github.com/mon3/WolfAndSheep#readme
 author:              mon3, mikolajczykmk
-maintainer:          example@example.com
 copyright:           2018 mon3, mikolajczykmk
 category:            Game, AI
 build-type:          Simple
 cabal-version:       >=1.10
 extra-source-files:  README.md
 
-executable WolfAndSheep
+executable game
   hs-source-dirs:      src
   main-is:             Main.hs
-  other-modules:       Model, AI, Controller
-  default-language:    Haskell2010
-  build-depends:       base >= 4.7 && < 5,
-                       random >= 1.0,
-                       directory >= 1.3.0.2,
-                       time
-
-executable gui
-  hs-source-dirs:      src
-  main-is:             View.hs
-  other-modules:       Model, GUI, Controller, AI
+  other-modules:       Model, GUI, Controller, AI, View
   default-language:    Haskell2010
   build-depends:       base >= 4.7 && < 5,
                        random >= 1.0,
@@ -31,11 +20,22 @@ executable gui
                        ansi-terminal >=0.8.0.4
 --  ghc-Options:         -Wall
 
+executable WolfAndSheep
+  hs-source-dirs:      src
+  main-is:             MainMinMax.hs
+  other-modules:       Model, AI, Controller
+  default-language:    Haskell2010
+  build-depends:       base >= 4.7 && < 5,
+                       random >= 1.0,
+                       directory >= 1.3.0.2,
+                       time
+
+
 Test-Suite test-gui-part
   type:               exitcode-stdio-1.0
   hs-source-dirs:     src,test
   main-is:            Test.hs
-  other-modules:      Model, Controller
+  other-modules:      Model, Controller, AI
   default-language:   Haskell2010
   build-depends:      base >= 4.7 && < 5,
                       test-framework,

@@ -11,6 +11,14 @@ data GameState = GameState Wolf Sheep deriving (Eq, Show,Read)
 data Result = WolfWins | SheepWins | Unrecognized deriving (Eq,Show,Read)
 data GameInfo = GameInfo {state :: GameState, result :: Result } deriving (Eq,Show,Read)
 
+------------------------------------------------------------------------------------------------------------
+-----------------------   INIT   --------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------
+sheepInitStates = [Point x y | y <- [0], x <- [0..7], odd x]
+wolfInitStates = [Point x y | y <- [7], x <- [0..7], even x]
+wolf = Wolf (Point 0 7)
+sheep = Sheep sheepInitStates
+------------------------------------------------------------------------------------------------------------
 
 
 possibleBoardX = [0..7]
