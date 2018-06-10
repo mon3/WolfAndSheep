@@ -2,12 +2,7 @@ module AI where
 
 import Model
 
-
-g:: Int -> String
-g _ = "Success!"
-
 data GameTree a = Empty | Node a [GameTree a] deriving (Show)
-
 data ScoreTree a = GameTree a
 
 minmaxDepth = 4
@@ -130,21 +125,7 @@ wolfGameMove gs = (bestWolfMove moves) where
 
 
 
--- start of MIN-MAX algorithm which selects best wolf move
--- return GameDTO (new gamestate, game result)
-wolfMoveState :: GameDTO -> GameDTO
-wolfMoveState (GameDTO (gs, res)) =
-  if (null possibleMoves)
-  then
-   GameDTO (gs,SheepWins)
-  else
-   if (lastWolfMove gs)
-   then
-    GameDTO (gs, WolfWins)
-   else
-    GameDTO (wolfGameMove gs, Unrecognized)
-  where
-   possibleMoves = [displacement | displacement <- wolfMoves, validWolfMove gs displacement]
+
 
 
 

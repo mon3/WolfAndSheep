@@ -1,0 +1,1 @@
+GameInfo {state = GameState (Wolf (Point 2 1)) (Sheep [Point 1 0,Point 1 2,Point 3 2,Point 3 0]), result = SheepWins}
