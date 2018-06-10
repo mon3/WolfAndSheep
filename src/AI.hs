@@ -20,7 +20,8 @@ depth (Node _ ts) = 1 + maximum(map depth ts)
 -- checks if wolf wins in currentGamestate or will win in the next step
 wolfWon :: GameState -> Point -> Bool
 wolfWon (GameState (Wolf (Point _ 0)) sheep) _ = True
-wolfWon gs dpoint = if (validWolfMove gs dpoint) && (yPoint newPos == 0) then True else False
+wolfWon gs dpoint = if possibleNewSheepPositions gs == [] then True else
+ if (validWolfMove gs dpoint) && (yPoint newPos == 0) then True else False
                     where newPos = getWolfMove (moveWolf gs dpoint)
 
 
@@ -48,8 +49,8 @@ lastWolfMove gs = if elem True resList then True
 getHeuristic :: GameState -> Int
 getHeuristic (GameState (Wolf (Point _ 0)) sheep) = 0
 getHeuristic (GameState (Wolf (Point x y)) sheep) = distanceToFinish * 10 + sheepLocalization + possibleDirections*10 + distanceToCenter * 10
-                                                 where distanceToFinish = abs(y)
-                                                       distanceToCenter = if x<=4 then abs(0-x) else abs(7-x)
+                                                 where distanceToFinish = abs(7-y)
+                                                       distanceToCenter = if x<=4 then abs(4-x) else abs(7-x)
                                                        possibleDirections = length [ point | point <- wolfMoves, (validWolfMove (GameState (Wolf (Point x y)) sheep) point)]
                                                        sheepLocalization = if sheepSurrounding (GameState (Wolf (Point x y)) sheep) == 4 then -1000
                                                                            else sheepSurrounding (GameState (Wolf (Point x y)) sheep)
