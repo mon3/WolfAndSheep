@@ -23,7 +23,8 @@ start = do
     putStrLn "9. Zakończenie gry"
     option <- getLine
     if (checkOption ["1","2","9"] option) then case option of
-                                                 "1" -> do print ("Rozpoczęcie gry" ++ option)
+                                                 "1" -> do putStrLn "Rozpoczęcie gry"
+                                                           putStrLn ""
                                                            duringGame getFirstGameStep
                                                  "2" -> loadGame
                                                  "9" -> do putStrLn "Dziękujemy za grę. Do zobaczenia!"
